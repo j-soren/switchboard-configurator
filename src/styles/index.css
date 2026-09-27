@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --color-luxury-gold: #d4af37;
+  --color-matte-black: #1a1a1a;
+}
