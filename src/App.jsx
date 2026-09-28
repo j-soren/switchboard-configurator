@@ -1,39 +1,41 @@
-import React from 'react';
-import ConfiguratorLayout from './components/layout/ConfiguratorLayout';
-import SwitchboardVisualizer from './components/preview/SwitchboardVisualizer';
-import ControlPanel from './components/controls/ControlPanel';
-import { useBoardState } from './hooks/useBoardState';
-import './styles/index.css';
+import React from "react";
+import ConfiguratorLayout from "./components/layout/ConfiguratorLayout";
+import SwitchboardVisualizer from "./components/preview/SwitchboardVisualizer";
+import ControlPanel from "./components/controls/ControlPanel";
+import { useBoardState } from "./hooks/useBoardState";
+import "./styles/index.css";
 
 export default function App() {
-  const { 
+  const {
     boardConfig,
-    activeModuleId, 
+    activeModuleId,
     setActiveModuleId,
-    addModule, 
-    removeModule, 
-    updateColor, 
-    updateIcon 
+    addModule,
+    removeModule,
+    updateMaterial,
+    updateIcon,
+    updatePlateSize, // <-- This must be extracted here for the app to work!
   } = useBoardState();
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-zinc-800">
-      <ConfiguratorLayout 
+      <ConfiguratorLayout
         preview={
-          <SwitchboardVisualizer 
-            config={boardConfig} 
+          <SwitchboardVisualizer
+            config={boardConfig}
             activeModuleId={activeModuleId}
             onSelectModule={setActiveModuleId}
           />
         }
         controls={
-          <ControlPanel 
+          <ControlPanel
             config={boardConfig}
             activeModuleId={activeModuleId}
             onAdd={addModule}
             onRemove={removeModule}
-            onColorChange={updateColor}
+            onMaterialChange={updateMaterial}
             onIconChange={updateIcon}
+            onPlateSizeChange={updatePlateSize} // <-- Passed down here
           />
         }
       />
