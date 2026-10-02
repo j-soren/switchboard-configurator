@@ -40,7 +40,8 @@ export default function SwitchboardVisualizer({
                 icon={module.icon}
                 isSelected={activeModuleId === module.id}
                 onSelect={() => onSelectModule(module.id)}
-                isLight={config.material.isLight}
+                boardIsLight={config.material.isLight}
+                switchMaterial={config.switchMaterial}
               />
             );
           if (module.type === "outlet")
@@ -49,7 +50,8 @@ export default function SwitchboardVisualizer({
                 key={module.id}
                 isSelected={activeModuleId === module.id}
                 onSelect={() => onSelectModule(module.id)}
-                isLight={config.material.isLight}
+                boardIsLight={config.material.isLight}
+                switchMaterial={config.switchMaterial}
               />
             );
           return (
@@ -57,7 +59,8 @@ export default function SwitchboardVisualizer({
               key={module.id}
               isSelected={activeModuleId === module.id}
               onSelect={() => onSelectModule(module.id)}
-              isLight={config.material.isLight}
+              boardIsLight={config.material.isLight}
+              switchMaterial={config.switchMaterial}
             />
           );
         })}

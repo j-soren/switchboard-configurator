@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// The complete Indian standard plate sizing
 export const PLATE_SIZES = [
   { size: 1, cols: 1, label: "1M" },
   { size: 2, cols: 2, label: "2M" },
@@ -14,10 +13,11 @@ export const PLATE_SIZES = [
 
 export function useBoardState() {
   const [boardConfig, setBoardConfig] = useState({
-    material: {
-      name: "Matte Black Acrylic",
-      background: "#18181b",
-      isLight: false,
+    material: { name: "CI-133 Black", background: "#151515", isLight: false },
+    switchMaterial: {
+      name: "Match Board",
+      background: "transparent",
+      isLight: null,
     },
     plateSize: 6,
     columns: 6,
@@ -28,6 +28,24 @@ export function useBoardState() {
   });
 
   const [activeModuleId, setActiveModuleId] = useState("1");
+  const [cart, setCart] = useState([]);
+
+  // Pricing Logic: 250 Base + 50 per functional module (blanks are 0)
+  const calculatePrice = (config) => {
+    const functionalModules = config.modules.filter(
+      (m) => m.type === "switch" || m.type === "outlet",
+    ).length;
+    return 250 + functionalModules * 50;
+  };
+
+  const currentPrice = calculatePrice(boardConfig);
+
+  // Calculate totals based on quantity
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   const addModule = (type) => {
     const totalM = boardConfig.modules.reduce(
@@ -55,9 +73,8 @@ export function useBoardState() {
   const removeModule = (id) => {
     setBoardConfig((prev) => {
       const newModules = prev.modules.filter((m) => m.id !== id);
-      if (activeModuleId === id) {
+      if (activeModuleId === id)
         setActiveModuleId(newModules.length > 0 ? newModules[0].id : null);
-      }
       return { ...prev, modules: newModules };
     });
   };
@@ -80,14 +97,33 @@ export function useBoardState() {
     }));
   };
 
-  const updateMaterial = (material) => {
+  const updateMaterial = (material) =>
     setBoardConfig((prev) => ({ ...prev, material }));
-  };
+
+  const updateSwitchMaterial = (switchMaterial) =>
+    setBoardConfig((prev) => ({ ...prev, switchMaterial }));
+
   const updateIcon = (id, icon) =>
     setBoardConfig((prev) => ({
       ...prev,
       modules: prev.modules.map((m) => (m.id === id ? { ...m, icon } : m)),
     }));
+
+  // Accepts quantity and deeply clones the config to prevent reference bugs in the cart
+  const addToCart = (quantity) => {
+    setCart((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        config: JSON.parse(JSON.stringify(boardConfig)),
+        price: currentPrice,
+        quantity: quantity,
+      },
+    ]);
+  };
+
+  const removeFromCart = (id) =>
+    setCart((prev) => prev.filter((item) => item.id !== id));
 
   return {
     boardConfig,
@@ -96,7 +132,14 @@ export function useBoardState() {
     addModule,
     removeModule,
     updateMaterial,
+    updateSwitchMaterial,
     updateIcon,
     updatePlateSize,
+    cart,
+    currentPrice,
+    cartCount,
+    cartTotal,
+    addToCart,
+    removeFromCart,
   };
 }

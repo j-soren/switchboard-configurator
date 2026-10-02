@@ -1,21 +1,20 @@
 import React from "react";
 
 export const FINISHES = [
-  // Solid Matte Finishes (IMG_8212.HEIC)
-  { name: "CI-101 White", background: "#f8f9fa", isLight: true }, //[cite: 3]
-  { name: "CI-102 Ghost White", background: "#eff1f3", isLight: true }, //[cite: 3]
-  { name: "CI-103 Smoke White", background: "#f4f4ef", isLight: true }, //[cite: 3]
-  { name: "CI-104 Ivory White", background: "#f3f1e6", isLight: true }, //[cite: 3]
-  { name: "CI-105 Fog Grey", background: "#3b4954", isLight: false }, //[cite: 3]
-  { name: "CI-106 Iron Grey", background: "#50575b", isLight: false }, //[cite: 3]
-  { name: "CI-107 Pewter Grey", background: "#6b7873", isLight: false }, //[cite: 3]
-  { name: "CI-109 Dark Grey", background: "#59585d", isLight: false }, //[cite: 3]
-  { name: "CI-110 Grey", background: "#787a79", isLight: false }, //[cite: 3]
-  { name: "CI-119 Silver", background: "#e1e3de", isLight: true }, //[cite: 3]
-  { name: "CI-120 Dove Grey", background: "#c3cac8", isLight: true }, //[cite: 3]
-  { name: "CI-133 Black", background: "#151515", isLight: false }, //[cite: 3]
-
-  // Wood Finishes
+  // Solid Matte Finishes
+  { name: "CI-101 White", background: "#f8f9fa", isLight: true },
+  { name: "CI-102 Dark Blue", background: "#0a2947", isLight: false },
+  { name: "CI-103 Teal", background: "#123f36", isLight: false },
+  { name: "CI-104 Ivory White", background: "#f3f1e6", isLight: true },
+  { name: "CI-105 Fog Grey", background: "#3b4954", isLight: false },
+  { name: "CI-106 Iron Grey", background: "#50575b", isLight: false },
+  { name: "CI-107 Brown", background: "#6d0808", isLight: false },
+  { name: "CI-109 Dark Grey", background: "#59585d", isLight: false },
+  { name: "CI-110 Grey", background: "#787a79", isLight: false },
+  { name: "CI-119 Silver", background: "#e1e3de", isLight: true },
+  { name: "CI-120 Dove Grey", background: "#c3cac8", isLight: true },
+  { name: "CI-133 Black", background: "#151515", isLight: false },
+  // Wood & Marble Finishes
   {
     name: "CI-30S Zebrano",
     background: "url(/textures/zebrano.jpg) center/cover",
@@ -31,8 +30,6 @@ export const FINISHES = [
     background: "url(/textures/early-american.jpg) center/cover",
     isLight: false,
   },
-
-  // Marble Finishes
   {
     name: "CI-414 Brecia Marble",
     background: "url(/textures/brecia-marble.jpg) center/cover",
@@ -50,10 +47,22 @@ export const FINISHES = [
   },
 ];
 
-export default function ColorSelector({ currentMaterial, onSelect }) {
+export default function ColorSelector({
+  currentMaterial,
+  onSelect,
+  allowMatchBoard,
+}) {
+  // Add the transparent option if requested
+  const options = allowMatchBoard
+    ? [
+        { name: "Match Board", background: "transparent", isLight: null },
+        ...FINISHES,
+      ]
+    : FINISHES;
+
   return (
     <div className="flex gap-3 flex-wrap">
-      {FINISHES.map((finish) => (
+      {options.map((finish) => (
         <button
           key={finish.name}
           onClick={() => onSelect(finish)}
@@ -62,7 +71,13 @@ export default function ColorSelector({ currentMaterial, onSelect }) {
               ? "border-[#d4af37] scale-110 shadow-lg"
               : "border-zinc-700 opacity-70 hover:opacity-100"
           }`}
-          style={{ background: finish.background }}
+          style={{
+            // Give the transparent option a diagonal striped pattern so it is visible in the UI
+            background:
+              finish.background === "transparent"
+                ? "repeating-linear-gradient(45deg, #18181b, #18181b 4px, #27272a 4px, #27272a 8px)"
+                : finish.background,
+          }}
           title={finish.name}
         />
       ))}

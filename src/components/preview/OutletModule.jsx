@@ -1,16 +1,26 @@
 import React from "react";
 
-export default function OutletModule({ isSelected, onSelect, isLight }) {
+export default function OutletModule({
+  isSelected,
+  onSelect,
+  boardIsLight,
+  switchMaterial,
+}) {
+  // Determine actual background and lighting based on the selection
+  const isTransparent = switchMaterial.background === "transparent";
+  const isLight = isTransparent ? boardIsLight : switchMaterial.isLight;
+  const bg = switchMaterial.background;
+
   return (
     <div
       className={`col-span-2 relative w-full h-24 rounded-sm flex items-center justify-center cursor-pointer transition-all duration-200`}
       onClick={() => onSelect()}
       style={{
-        background: "transparent",
+        background: bg,
         boxShadow: isLight
           ? "inset 1px 1px 3px rgba(255,255,255,0.9), inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05)"
           : "inset 1px 1px 2px rgba(255,255,255,0.15), inset -1px -1px 3px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)",
-        border: isSelected ? "2px solid #d4af37" : "2px solid black",
+        border: isSelected ? "2px solid #d4af37" : "2px solid transparent",
       }}
     >
       {/* Precise physical coordinate container */}
