@@ -16,8 +16,12 @@ export default function ControlPanel({ config, activeModuleId, onAdd, onRemove, 
 
   return (
     <div className="w-96 bg-zinc-950 border-l border-zinc-800 flex flex-col h-[calc(100vh-4rem)]">
-      {/* Scrollable Configuration Area */}
-      <div className="p-8 flex-1 overflow-y-auto space-y-10">
+      {/* 
+        Scrollable Configuration Area 
+        Added pb-32 (padding-bottom: 8rem) here to ensure the icon picker 
+        scrolls completely above the fixed footer.
+      */}
+      <div className="p-8 pb-32 flex-1 overflow-y-auto space-y-10">
         <h2 className="text-2xl font-light tracking-wide mb-8">Configuration</h2>
         
         <section>
@@ -44,7 +48,6 @@ export default function ControlPanel({ config, activeModuleId, onAdd, onRemove, 
           <div className="space-y-4">
             <ModuleCounter onAdd={onAdd} />
             
-            {/* MOVED HERE: Now directly under Add Modules, highly accessible on mobile */}
             {activeModule && (
               <button
                 onClick={() => onRemove(activeModuleId)}
